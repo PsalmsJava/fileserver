@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven 3.3.9' 
+        jdk 'jdk11' 
+    }
+    stages {        
+        stage('build and start app') {
+            steps {
+                echo 'Starting Application build'
+                sh 'mvn clean package'
+            }
+        }
+
+       stage('dockerize') {
+            steps {
+                echo 'Starting docker build'
+                sh 'docker build . -t filserver/src'
+            }
+        }
+        
+
+        stage('deliver') {
+            agent any
+            steps {
+                echo 'Deploying to Dockerhub'
+
+
+                }
+            }
+        }
+    } 
+
+    post {
+        success {
+            echo "Deploying on the Server"
+            // sh 'docker-compose down'
+            // sh 'docker image rm chibexme/ozioma-server'
+            // sh 'docker image rm chibexme/zigatext-server'
+            // sh 'docker-compose up -d'
+        }
+        failure{
+            echo 'E don spoil'
+        }
+        
+    }
+}
